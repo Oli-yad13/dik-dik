@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Menu, X, Search, Globe, User, Heart } from 'lucide-react';
+import { ShoppingCart, Menu, X, Globe, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartManager } from '@/lib/cart';
 
@@ -58,45 +58,27 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Center Search - Desktop Only */}
-          <div className="hidden lg:flex flex-1 max-w-md mx-8">
-            <div className="w-full relative">
-              <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow duration-200">
-                <div className="flex-1 px-6 py-3">
-                  <input
-                    type="text"
-                    placeholder="Search furniture..."
-                    className="w-full text-sm bg-transparent border-none outline-none placeholder-gray-500"
-                  />
-                </div>
-                <button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white p-3 rounded-full mr-1 hover:from-orange-600 hover:to-pink-600 transition-colors">
-                  <Search className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-1">
+            <Link href="/products">
+              <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
+                Browse
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
+                About
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
+                Contact
+              </Button>
+            </Link>
           </div>
 
           {/* Right side actions */}
           <div className="flex items-center space-x-1">
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1 mr-4">
-              <Link href="/products">
-                <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
-                  Browse
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
-                  About
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full px-4 py-2 font-medium">
-                  Contact
-                </Button>
-              </Link>
-            </div>
-
             {/* Wishlist */}
             <Button variant="ghost" size="sm" className="hidden sm:flex text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-full p-3">
               <Heart className="h-5 w-5" />
@@ -137,22 +119,6 @@ export function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="lg:hidden border-t bg-white">
-            {/* Mobile Search */}
-            <div className="px-4 py-4 border-b">
-              <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full">
-                <div className="flex-1 px-4 py-3">
-                  <input
-                    type="text"
-                    placeholder="Search furniture..."
-                    className="w-full text-sm bg-transparent border-none outline-none placeholder-gray-500"
-                  />
-                </div>
-                <button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white p-3 rounded-full mr-1">
-                  <Search className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
                 <Link
