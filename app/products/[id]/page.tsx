@@ -25,22 +25,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 
-// Generate static params for all products
-export async function generateStaticParams() {
-  try {
-    const { data: products } = await supabase
-      .from('products')
-      .select('id');
-    
-    return products?.map((product) => ({
-      id: product.id,
-    })) || [];
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
-
 export default function ProductPage() {
   const params = useParams();
   const [product, setProduct] = useState<Product | null>(null);
@@ -146,8 +130,13 @@ export default function ProductPage() {
               />
               {product.featured && (
                 <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600">
-                  Featured
+                  {product.code_name === 'J001' ? '🌟 New!' : 'Featured'}
                 </Badge>
+              )}
+              {product.code_name === 'J001' && (
+                <div className="absolute top-4 right-16 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                  Just Added! ✨
+                </div>
               )}
               <button
                 onClick={toggleWishlist}
@@ -188,7 +177,12 @@ export default function ProductPage() {
                   <Share className="h-4 w-4" />
                 </Button>
               </div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
+              <div className="flex items-center space-x-2 mb-4">
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">{product.name}</h1>
+                {product.code_name === 'J001' && (
+                  <span className="text-orange-500 text-2xl">✨</span>
+                )}
+              </div>
               
               <div className="flex items-center space-x-4 mb-6">
                 <div className="flex items-center space-x-1">
