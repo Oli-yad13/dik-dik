@@ -1,18 +1,11 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
-import { Product, supabase } from '@/lib/supabase';
-import { CartManager } from '@/lib/cart';
+import { supabase } from '@/lib/supabase';
 import { 
-  ShoppingCart, 
-  Heart, 
   Truck, 
   Shield, 
   RotateCcw, 
@@ -24,82 +17,48 @@ import {
   Calendar,
   CheckCircle
 } from 'lucide-react';
+import { ProductActions } from '@/components/product/product-actions';
 
-export default function ProductPage() {
-  const params = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select(`
-            *,
-            category:categories(*)
-          `)
-          .eq('id', params.id)
-          .single();
-
-        if (error) throw error;
-        setProduct(data);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (params.id) {
-      fetchProduct();
-    }
-  }, [params.id]);
-
-  const handleAddToCart = () => {
-    if (product) {
-      CartManager.addToCart(product, quantity);
-    }
-  };
-
-  const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="bg-gray-200 aspect-square rounded-2xl animate-pulse"></div>
-            <div className="space-y-4">
-              <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-20 bg-gray-200 rounded animate-pulse"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+// Generate static params for all products
+export async function generateStaticParams() {
+  try {
+    const { data: products } = await supabase
+      .from('products')
+      .select('id');
+    
+    return products?.map((product) => ({
+      id: product.id,
+    })) || [];
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
   }
+}
+
+async function getProduct(id: string) {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        category:categories(*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+}
+
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
 
   if (!product) {
-    return (
-      <div className="min-h-screen bg-white pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-            <p className="text-gray-600 mb-8">The product you're looking for doesn't exist.</p>
-            <Link href="/products">
-              <Button>Browse All Products</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   return (
@@ -123,7 +82,7 @@ export default function ProductPage() {
           <div className="space-y-4">
             <div className="relative aspect-square bg-gray-50 rounded-2xl overflow-hidden">
               <Image
-                src={product.images[selectedImage] || '/placeholder-furniture.jpg'}
+                src={product.images[0] || '/placeholder-furniture.jpg'}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -138,23 +97,14 @@ export default function ProductPage() {
                   Just Added! ✨
                 </div>
               )}
-              <button
-                onClick={toggleWishlist}
-                className="absolute top-4 right-4 p-3 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-              >
-                <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-700'}`} />
-              </button>
             </div>
             
             {product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
                 {product.images.map((image, index) => (
-                  <button
+                  <div
                     key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative aspect-square bg-gray-50 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index ? 'border-orange-500' : 'border-transparent hover:border-gray-300'
-                    }`}
+                    className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden border-2 border-gray-200"
                   >
                     <Image
                       src={image}
@@ -162,7 +112,7 @@ export default function ProductPage() {
                       fill
                       className="object-cover"
                     />
-                  </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -173,9 +123,9 @@ export default function ProductPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm text-gray-500 font-mono">{product.code_name}</p>
-                <Button variant="ghost" size="sm">
+                <button className="p-2 hover:bg-gray-50 rounded-full transition-colors">
                   <Share className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
               <div className="flex items-center space-x-2 mb-4">
                 <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">{product.name}</h1>
@@ -257,49 +207,8 @@ export default function ProductPage() {
 
             <Separator />
 
-            {/* Add to Cart Section */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <label className="font-medium text-gray-900">Quantity:</label>
-                <div className="flex items-center border border-gray-300 rounded-lg">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-2 hover:bg-gray-50 transition-colors"
-                  >
-                    -
-                  </button>
-                  <span className="px-4 py-2 border-x border-gray-300 min-w-[60px] text-center">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 hover:bg-gray-50 transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex space-x-4">
-                <Button
-                  size="lg"
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-4 rounded-xl"
-                  onClick={handleAddToCart}
-                  disabled={!product.in_stock}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  {product.in_stock ? 'Add to Cart' : 'Out of Stock'}
-                </Button>
-                <Button size="lg" variant="outline" className="px-6">
-                  <Heart className="h-5 w-5" />
-                </Button>
-              </div>
-
-              {product.in_stock && (
-                <div className="flex items-center space-x-2 text-green-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span className="text-sm font-medium">In stock and ready to ship</span>
-                </div>
-              )}
-            </div>
+            {/* Add to Cart Section - Client Component */}
+            <ProductActions product={product} />
 
             {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t">
