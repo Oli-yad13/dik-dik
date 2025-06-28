@@ -47,7 +47,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center">
             <div className="relative w-16 h-8">
               <Image
                 src="/dik dik.svg"
@@ -55,10 +55,6 @@ export function Header() {
                 fill
                 className="object-contain"
               />
-            </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="text-xl font-bold text-gray-900">Dik Dik</span>
-              <span className="text-xs text-gray-600 -mt-1">Tiny Furniture, Big Imagination</span>
             </div>
           </Link>
 
