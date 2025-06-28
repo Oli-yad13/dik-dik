@@ -23,7 +23,9 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
   if (viewMode === 'list') {
     return (
       <Link href={`/products/${product.id}`}>
-        <div className="group bg-white rounded-2xl shadow-sm border hover:shadow-md transition-all duration-300 overflow-hidden p-6">
+        <div className={`group bg-white rounded-2xl shadow-sm border hover:shadow-md transition-all duration-300 overflow-hidden p-6 ${
+          product.code_name === 'J001' ? 'ring-2 ring-orange-200 border-orange-200' : ''
+        }`}>
           <div className="flex gap-6">
             <div className="relative w-48 h-48 flex-shrink-0 overflow-hidden rounded-xl">
               <Image
@@ -35,14 +37,24 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
               <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors opacity-0 group-hover:opacity-100">
                 <Heart className="h-4 w-4 text-gray-700" />
               </button>
+              {product.code_name === 'J001' && (
+                <div className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                  🌟 New Arrival!
+                </div>
+              )}
             </div>
             
             <div className="flex-1 space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
-                    {product.name}
-                  </h3>
+                  <div className="flex items-center space-x-2">
+                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                      {product.name}
+                    </h3>
+                    {product.code_name === 'J001' && (
+                      <span className="text-orange-500">✨</span>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-500 font-mono">{product.code_name}</p>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -88,7 +100,9 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
   return (
     <Link href={`/products/${product.id}`}>
       <div className="group cursor-pointer">
-        <div className="relative aspect-square mb-3 overflow-hidden rounded-2xl">
+        <div className={`relative aspect-square mb-3 overflow-hidden rounded-2xl ${
+          product.code_name === 'J001' ? 'ring-2 ring-orange-300 ring-opacity-60' : ''
+        }`}>
           <Image
             src={product.images[0] || '/placeholder-furniture.jpg'}
             alt={product.name}
@@ -100,7 +114,12 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
           </button>
           {product.featured && (
             <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-              Featured
+              {product.code_name === 'J001' ? '🌟 New!' : 'Featured'}
+            </div>
+          )}
+          {product.code_name === 'J001' && (
+            <div className="absolute bottom-3 left-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+              Just Added! ✨
             </div>
           )}
           {!product.in_stock && (
@@ -114,9 +133,14 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
         
         <div className="space-y-1">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
-              {product.name}
-            </h3>
+            <div className="flex items-center space-x-2">
+              <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
+                {product.name}
+              </h3>
+              {product.code_name === 'J001' && (
+                <span className="text-orange-500 text-sm">✨</span>
+              )}
+            </div>
             <div className="flex items-center space-x-1">
               <Star className="h-4 w-4 fill-current text-gray-900" />
               <span className="text-sm font-medium">4.8</span>

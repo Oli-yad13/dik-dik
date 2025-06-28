@@ -22,6 +22,7 @@ export function FeaturedProducts() {
           `)
           .eq('featured', true)
           .eq('in_stock', true)
+          .order('code_name', { ascending: true }) // This will put J001 first
           .limit(12);
 
         if (error) throw error;
@@ -81,7 +82,7 @@ export function FeaturedProducts() {
 
         {/* Products Grid - Airbnb Card Style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {products.map((product) => (
+          {products.map((product, index) => (
             <Link key={product.id} href={`/products/${product.id}`}>
               <div className="group cursor-pointer">
                 <div className="relative aspect-square mb-3 overflow-hidden rounded-2xl">
@@ -96,16 +97,25 @@ export function FeaturedProducts() {
                   </button>
                   {product.featured && (
                     <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                      Featured
+                      {product.code_name === 'J001' ? '🌟 New!' : 'Featured'}
                     </div>
+                  )}
+                  {/* Special highlight for J001 */}
+                  {product.code_name === 'J001' && (
+                    <div className="absolute inset-0 ring-2 ring-orange-400 ring-opacity-50 rounded-2xl pointer-events-none"></div>
                   )}
                 </div>
                 
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
+                        {product.name}
+                      </h3>
+                      {product.code_name === 'J001' && (
+                        <span className="text-orange-500 text-xs">✨</span>
+                      )}
+                    </div>
                     <div className="flex items-center space-x-1">
                       <Star className="h-4 w-4 fill-current text-gray-900" />
                       <span className="text-sm font-medium">4.8</span>
