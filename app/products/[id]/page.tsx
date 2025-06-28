@@ -25,6 +25,22 @@ import {
   CheckCircle
 } from 'lucide-react';
 
+// Generate static params for all products
+export async function generateStaticParams() {
+  try {
+    const { data: products } = await supabase
+      .from('products')
+      .select('id');
+    
+    return products?.map((product) => ({
+      id: product.id,
+    })) || [];
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+
 export default function ProductPage() {
   const params = useParams();
   const [product, setProduct] = useState<Product | null>(null);
