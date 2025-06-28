@@ -23,7 +23,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
   if (viewMode === 'list') {
     return (
       <Link href={`/products/${product.id}`}>
-        <div className="group bg-white rounded-2xl shadow-sm border hover:shadow-lg transition-all duration-300 overflow-hidden p-6">
+        <div className="group bg-white rounded-2xl shadow-sm border hover:shadow-md transition-all duration-300 overflow-hidden p-6">
           <div className="flex gap-6">
             <div className="relative w-48 h-48 flex-shrink-0 overflow-hidden rounded-xl">
               <Image
@@ -32,7 +32,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
+              <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors opacity-0 group-hover:opacity-100">
                 <Heart className="h-4 w-4 text-gray-700" />
               </button>
             </div>
@@ -40,13 +40,13 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
             <div className="flex-1 space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
                     {product.name}
                   </h3>
                   <p className="text-sm text-gray-500 font-mono">{product.code_name}</p>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 fill-current text-yellow-400" />
+                  <Star className="h-4 w-4 fill-current text-gray-900" />
                   <span className="text-sm font-medium">4.8</span>
                 </div>
               </div>
@@ -72,7 +72,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
                 <Button
                   onClick={handleAddToCart}
                   disabled={!product.in_stock}
-                  className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
+                  className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-full"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart
@@ -95,17 +95,17 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
+          <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors opacity-0 group-hover:opacity-100">
             <Heart className="h-4 w-4 text-gray-700" />
           </button>
           {product.featured && (
-            <div className="absolute top-3 left-3 bg-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold">
+            <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
               Featured
             </div>
           )}
           {!product.in_stock && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="bg-white text-gray-900 px-3 py-1 rounded-lg font-semibold">
+              <span className="bg-white text-gray-900 px-3 py-1 rounded-full font-semibold">
                 Out of Stock
               </span>
             </div>
@@ -114,19 +114,19 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
         
         <div className="space-y-1">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+            <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
               {product.name}
             </h3>
             <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4 fill-current text-yellow-400" />
+              <Star className="h-4 w-4 fill-current text-gray-900" />
               <span className="text-sm font-medium">4.8</span>
             </div>
           </div>
           
-          <p className="text-sm text-gray-600">{product.category?.name}</p>
+          <p className="text-sm text-gray-600 line-clamp-1">{product.category?.name}</p>
           <p className="text-sm text-gray-500">{product.age_range}</p>
           
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 pt-1">
             <span className="font-bold text-gray-900">${product.price}</span>
             <span className="text-sm text-gray-600">total</span>
           </div>

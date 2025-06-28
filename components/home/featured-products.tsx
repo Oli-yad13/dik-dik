@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Product, supabase } from '@/lib/supabase';
-import { Star, Heart, ArrowRight } from 'lucide-react';
+import { Star, Heart, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,7 +22,7 @@ export function FeaturedProducts() {
           `)
           .eq('featured', true)
           .eq('in_stock', true)
-          .limit(8);
+          .limit(12);
 
         if (error) throw error;
         setProducts(data || []);
@@ -53,6 +53,7 @@ export function FeaturedProducts() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header - Airbnb Style */}
         <div className="flex items-center justify-between mb-12">
           <div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -62,14 +63,23 @@ export function FeaturedProducts() {
               Handpicked furniture pieces loved by families worldwide
             </p>
           </div>
-          <Link href="/products">
-            <Button variant="outline" size="lg" className="hidden lg:flex">
-              Show all
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="hidden lg:flex items-center space-x-2">
+            <button className="p-2 border border-gray-300 rounded-full hover:border-gray-400 transition-colors">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button className="p-2 border border-gray-300 rounded-full hover:border-gray-400 transition-colors">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <Link href="/products">
+              <Button variant="outline" size="lg" className="ml-4 rounded-full">
+                Show all
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
+        {/* Products Grid - Airbnb Card Style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`}>
@@ -81,11 +91,11 @@ export function FeaturedProducts() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
+                  <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors opacity-0 group-hover:opacity-100">
                     <Heart className="h-4 w-4 text-gray-700" />
                   </button>
                   {product.featured && (
-                    <div className="absolute top-3 left-3 bg-orange-500 text-white px-2 py-1 rounded-lg text-xs font-semibold">
+                    <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
                       Featured
                     </div>
                   )}
@@ -93,19 +103,19 @@ export function FeaturedProducts() {
                 
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
                       {product.name}
                     </h3>
                     <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 fill-current text-yellow-400" />
+                      <Star className="h-4 w-4 fill-current text-gray-900" />
                       <span className="text-sm font-medium">4.8</span>
                     </div>
                   </div>
                   
-                  <p className="text-sm text-gray-600">{product.category?.name}</p>
+                  <p className="text-sm text-gray-600 line-clamp-1">{product.category?.name}</p>
                   <p className="text-sm text-gray-500">{product.age_range}</p>
                   
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center space-x-1 pt-1">
                     <span className="font-bold text-gray-900">${product.price}</span>
                     <span className="text-sm text-gray-600">total</span>
                   </div>
@@ -115,9 +125,10 @@ export function FeaturedProducts() {
           ))}
         </div>
 
+        {/* Mobile Show All Button */}
         <div className="text-center lg:hidden">
           <Link href="/products">
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="rounded-full">
               Show all products
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
