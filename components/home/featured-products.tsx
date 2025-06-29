@@ -22,7 +22,7 @@ export function FeaturedProducts() {
           `)
           .eq('featured', true)
           .eq('in_stock', true)
-          .order('code_name', { ascending: true }) // This will put J001 first
+          .order('code_name', { ascending: true }) // This will put J001 and K001 first
           .limit(12);
 
         if (error) throw error;
@@ -80,6 +80,26 @@ export function FeaturedProducts() {
           </div>
         </div>
 
+        {/* Featured Set Highlight */}
+        {products.some(p => p.code_name === 'J001') && products.some(p => p.code_name === 'K001') && (
+          <div className="bg-gradient-to-r from-orange-50 to-pink-50 rounded-2xl p-6 mb-12 border border-orange-200">
+            <div className="text-center">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">✨ Perfect Learning Set</h3>
+              <p className="text-gray-600 mb-4">
+                Discover our J001 Rainbow Learning Chair paired with the K001 Hardwood Activity Table - 
+                the perfect combination for creative learning and play!
+              </p>
+              <div className="flex justify-center space-x-4">
+                <Link href="/products?category=desks-chairs">
+                  <Button className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-full">
+                    Shop the Set 🌈
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Products Grid - Airbnb Card Style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {products.map((product, index) => (
@@ -97,12 +117,19 @@ export function FeaturedProducts() {
                   </button>
                   {product.featured && (
                     <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                      {product.code_name === 'J001' ? '🌟 New!' : 'Featured'}
+                      {product.code_name === 'J001' ? '🌈 New Chair!' : 
+                       product.code_name === 'K001' ? '🪵 New Table!' : 'Featured'}
                     </div>
                   )}
-                  {/* Special highlight for J001 */}
-                  {product.code_name === 'J001' && (
+                  {/* Special highlight for J001 and K001 */}
+                  {(product.code_name === 'J001' || product.code_name === 'K001') && (
                     <div className="absolute inset-0 ring-2 ring-orange-400 ring-opacity-50 rounded-2xl pointer-events-none"></div>
+                  )}
+                  {/* Perfect Set Badge */}
+                  {(product.code_name === 'J001' || product.code_name === 'K001') && (
+                    <div className="absolute bottom-3 left-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
+                      Perfect Set ✨
+                    </div>
                   )}
                 </div>
                 
@@ -112,7 +139,7 @@ export function FeaturedProducts() {
                       <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
                         {product.name}
                       </h3>
-                      {product.code_name === 'J001' && (
+                      {(product.code_name === 'J001' || product.code_name === 'K001') && (
                         <span className="text-orange-500 text-xs">✨</span>
                       )}
                     </div>
